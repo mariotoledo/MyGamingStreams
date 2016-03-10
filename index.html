@@ -30,6 +30,18 @@
                 color: #FFF;
             }
 
+            .mdl-list__item-avatar{
+                background-size: cover;
+                background-position: center center;
+            }
+
+            .mdl-list a{
+                text-decoration: none;
+            }
+
+            .mdl-list{
+                margin-top: 0px;
+            }
 		</style>
 
         <script type="text/javascript" src="jquery.min.js"></script>
@@ -47,11 +59,16 @@
                 <div style="padding-top: 12px;" aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button"><i class="fa fa-info-circle"></i></div>
                 <div class="mdl-layout__header-row">
                     <span class="mdl-layout-title">My Gaming Streams</span>
+                    <button onclick="updateOnlineStreams()" id="demo-menu-lower-right"
+                            class="mdl-button mdl-js-button mdl-button--icon">
+                        <i class="fa fa-refresh fa-1"></i>
+                    </button>
                 </div>
+                
                 <!-- Tabs -->
                 <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-                    <a href="#fixed-tab-1" class="mdl-layout__tab is-active">Recomended</a>
-                    <a href="#fixed-tab-2" class="mdl-layout__tab">Custom</a>
+                    <a href="#fixed-tab-1" class="mdl-layout__tab is-active">Streams</a>
+                    <a href="#fixed-tab-2" class="mdl-layout__tab">Add</a>
                 </div>
             </header>
             <div class="mdl-layout__drawer">
@@ -64,17 +81,21 @@
             <main class="mdl-layout__content">
                 <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
                     <div class="page-content">
-                        <div id="loading">loading...</div>
+                        <div id="loading" style="padding: 20px;">
+                            <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+                        </div>
                         <div id="streams" style="display: none;">
                             <div class="subTitle-online">
-                                <span class="mdl-layout-title">Online</span>
+                                <span class="mdl-layout-title">Online <span id="onlineCount"></span></span>
                             </div>
                             <ul class="demo-list-two mdl-list"  id="online">
                             </ul>
+                            <div style="padding: 20px; text-align: center;" id="no-online">There are no streammers online</div>
                             <div class="subTitle-offline">
-                                <span class="mdl-layout-title">Offline</span>
+                                <span class="mdl-layout-title">Offline <span id="offlineCount"></span></span>
                             </div>
-                            <div id="offline"></div>
+                            <ul class="demo-list-two mdl-list" id="offline"></ul>
+                            <div style="padding: 20px; text-align: center;" id="no-offline">There are no streammers offline</div>
                         </div>
                     </div>
                 </section>
