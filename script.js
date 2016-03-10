@@ -82,7 +82,13 @@ var streamsDB = {
 		var $offlineStreams = $('#offline');
 
 		for(var key in onlineStreams){
-			$onlineStreams.append('<b>' + onlineStreams[key].name + '</b><br/>');
+		    $onlineStreams.append('<li class="mdl-list__item mdl-list__item--two-line">' + 
+                                  '<span class="mdl-list__item-primary-content">' + 
+                                  '<i class="material-icons mdl-list__item-avatar"></i>' + 
+                                  '<span>' + onlineStreams[key].name + '</span>' + 
+                                  '<span class="mdl-list__item-sub-title">Playing ' + onlineStreams[key].gamePlaying + '</span>' +
+                                  '<span class="mdl-list__item-sub-title">' + onlineStreams[key].numberOfWatchers + ' watchers</span>' + 
+                                  '</li>');
 		}
 
 		for(var key in offlineStreams){

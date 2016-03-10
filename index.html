@@ -1,0 +1,91 @@
+﻿<html>
+	<head>
+        <link href="material.min.css" rel="stylesheet">
+        <link href="font-awesome.min.css" rel="stylesheet">
+		<style>
+			body{
+				width: 320px;
+                height: 400px;
+			}
+
+            .about{
+                padding: 20px;
+            }
+
+            .subTitle-online, .subTitle-offline{
+                height: 56px;
+                text-align: center;
+            }
+
+            .subTitle-online .mdl-layout-title, .subTitle-offline .mdl-layout-title{
+                line-height: 56px;
+            }
+
+            .subTitle-online{
+                background-color: rgb(139, 195, 74);
+            }
+
+            .subTitle-offline{
+                background-color: rgb(244, 67, 54);
+                color: #FFF;
+            }
+
+		</style>
+
+        <script type="text/javascript" src="jquery.min.js"></script>
+        <script type="text/javascript" src="material.min.js"></script>
+        <script type="text/javascript" src="script.js"></script>
+	</head>
+	<body>
+        <!-- ======================================================================================== -->
+        <!-- =================================== HEADER START ======================================= -->
+        <!-- ======================================================================================== -->
+
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
+            mdl-layout--fixed-tabs">
+            <header class="mdl-layout__header">
+                <div style="padding-top: 12px;" aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button"><i class="fa fa-info-circle"></i></div>
+                <div class="mdl-layout__header-row">
+                    <span class="mdl-layout-title">My Gaming Streams</span>
+                </div>
+                <!-- Tabs -->
+                <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
+                    <a href="#fixed-tab-1" class="mdl-layout__tab is-active">Recomended</a>
+                    <a href="#fixed-tab-2" class="mdl-layout__tab">Custom</a>
+                </div>
+            </header>
+            <div class="mdl-layout__drawer">
+                <span class="mdl-layout-title">My Gaming Streams</span>
+                <div class="about">
+                    <p>Developed by <b>Mario Toledo</b></p>
+                </div>
+                
+            </div>
+            <main class="mdl-layout__content">
+                <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
+                    <div class="page-content">
+                        <div id="loading">loading...</div>
+                        <div id="streams" style="display: none;">
+                            <div class="subTitle-online">
+                                <span class="mdl-layout-title">Online</span>
+                            </div>
+                            <ul class="demo-list-two mdl-list"  id="online">
+                            </ul>
+                            <div class="subTitle-offline">
+                                <span class="mdl-layout-title">Offline</span>
+                            </div>
+                            <div id="offline"></div>
+                        </div>
+                    </div>
+                </section>
+                <section class="mdl-layout__tab-panel" id="fixed-tab-2">
+                    <div class="page-content">
+
+                    </div>
+                </section>
+            </main>
+        </div>
+
+		
+	</body>
+</html>
