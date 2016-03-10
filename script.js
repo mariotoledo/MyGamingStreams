@@ -1,3 +1,5 @@
+
+
 var streamsDB = {
 			"kami": {
 				"name": 'Kami',
@@ -38,19 +40,27 @@ var streamsDB = {
 		$.ajaxSetup({
 		   async: false
 		});
+
+		//localStorage.var
+
+		$('#refresh-button').click(function (e) { updateOnlineStreams() });
+
 		updateOnlineStreams();
 	}, false);
 
-	function showLoadingMessage(show){
+	function showLoadingMessage(show) {
+        
 		var $loading = $('#loading');
 		var $streams = $('#streams');
 
-		if(show == true){
-			$loading.show();
-			$streams.hide();
+		if (show == true) {
+		    console.log('abrindo');
+		    $('#loading').show('');
+		    $('#streams').hide();
 		} else {
-			$loading.hide();
-			$streams.show();
+		    console.log('fechando');
+		    $('#loading').hide();
+		    $('#streams').show();
 		}
 	}
 
