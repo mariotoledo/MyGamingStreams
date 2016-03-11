@@ -5,10 +5,13 @@
   "description": "Check the status of your favorite gaming streamers",
   "version": "1.0",
   "browser_action": {
-   "default_icon": "icon.png",
-   "default_popup": "index.html"
+    "default_icon": "icon.png",
+    "default_popup": "index.html"
+  },
+  "background": {
+    "page": "background.html"
   },
   "permissions": [
-   "activeTab"
+   "activeTab", "background"
    ]
 }
