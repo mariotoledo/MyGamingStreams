@@ -1,180 +1,326 @@
+/*
+* script.js
+* by Mario Toledo (mariotoledo12@gmail.com)
+* 
+* Stores the main script for My Gaming Streams
+*/
 
+var streamsDB;
 
-var streamsDB = {
-			"kami": {
-				"name": 'Kami',
-				"id": 'kami',
-				"type": 'azubu',
-			},
-			"brtt": {
-				"name": 'Brtt',
-				"id": 'brtt',
-				"type": 'azubu'
-			},
-			"riotgames": {
-				"name": 'Riot Games',
-				"id": 'riotgames',
-				"type": 'twitch'
-			},
-			"Faker": {
-				"name": 'Faker',
-				"id": "Faker",
-				"type": 'azubu'
-			},
-			"LoLEsports": {
-				"name": 'Lol eSports',
-				"id": "LoLEsports",
-				"type": 'azubu'
-			},
-			"stonedyooda": {
-			    "name": 'StoneD YoDa',
-			    "id": "stonedyooda",
-			    "type": 'twitch'
-			}
+var onlineStreams = [];
+var offlineStreams = [];
+
+var isBusy = false;
+
+document.addEventListener('DOMContentLoaded', function() {
+	$.ajaxSetup({
+		async: false
+	});
+
+	streamsDB = JSON.parse(localStorage.getItem('streams-mygamingstreams'));
+
+    //if its the first time that the app is used, then we insert some good streamers for them :D
+	if (!streamsDB) {
+		streamsDB = {
+		    kami: {
+		        name: 'Kami',
+		        id: 'kami',
+		        type: 'azubu',
+		    },
+		    brtt: {
+		        name: 'Brtt',
+		        id: 'brtt',
+		        type: 'azubu'
+		    },
+		    riotgames: {
+		        name: 'Riot Games',
+		        id: 'riotgames',
+		        type: 'twitch'
+		    },
+		    faker: {
+		        name: 'Faker',
+		        id: "Faker",
+		        type: 'azubu'
+		    },
+		    lolesports: {
+		        name: 'Lol eSports',
+		        id: "LoLEsports",
+		        type: 'azubu'
+		    },
+		    stonedyooda: {
+		        name: 'StoneD YoDa',
+		        id: "stonedyooda",
+		        type: 'twitch'
+		    }
 		}
+	}
 
-		var onlineStreams = [];
-		var offlineStreams = [];
+	$('#btnAddStreamer').click(function (e) { addStreamer() });
+	$('#refresh-button').click(function (e) { updateOnlineStreams() });
 
-	document.addEventListener('DOMContentLoaded', function() {
-		$.ajaxSetup({
-		   async: false
-		});
+	updateOnlineStreams();
+}, false);
 
-		//localStorage.var
+/*
+* Garantees that no action button will be active while the app is fetching data
+*/
+function setBusyState(isBusy) {
+    if (isBusy) {
+        $('#refresh-button').hide();
+        $('#refreshing-icon').show();
+    } else {
+        $('#refresh-button').show();
+        $('#refreshing-icon').hide();
+    }
 
-		$('#refresh-button').click(function (e) { updateOnlineStreams() });
+	$('#btnAddStreamer').attr('disabled', isBusy);
+	$('#newStreamUrl').attr('disabled', isBusy);
+}
 
-		updateOnlineStreams();
-	}, false);
-
-	function showLoadingMessage(show) {
-        
-		var $loading = $('#loading');
-		var $streams = $('#streams');
-
-		if (show == true) {
-		    console.log('abrindo');
-		    $('#loading').show('');
-		    $('#streams').hide();
-		} else {
-		    console.log('fechando');
+/*
+* Shows or hides loading message
+*/
+function showLoadingMessage(show) {
+    if (show == true) {
+        $('#loading').show();
+        $('#streams').hide();
+        setBusyState(true);
+	} else {
+		setTimeout(function () {
 		    $('#loading').hide();
 		    $('#streams').show();
-		}
+		    setBusyState(false);
+		}, 3000);
 	}
+}
 
-	function updateOnlineStreams(){
-		showLoadingMessage(true);
+/*
+* Fetchs new information from stored streams and reloads the screen with updated information
+*/
+function updateOnlineStreams(){
+	showLoadingMessage(true);
 
-		onlineStreams = [];
-		offlineStreams = [];
+	onlineStreams = [];
+	offlineStreams = [];
 
-		for(var streammerKey in streamsDB){
-			if(streamsDB[streammerKey].type == 'twitch'){
-				if(getStatusFromTwitch(streamsDB[streammerKey]) == true){
-					onlineStreams.push(streamsDB[streammerKey]);
-				} else {
-					offlineStreams.push(streamsDB[streammerKey]);
-				}
-			} else if (streamsDB[streammerKey].type == 'azubu'){
-				if(getStatusFromAzubu(streamsDB[streammerKey]) == true){
-					onlineStreams.push(streamsDB[streammerKey]);
-				} else {
-					offlineStreams.push(streamsDB[streammerKey]);
-				}
+	for(var streammerKey in streamsDB){
+		if(streamsDB[streammerKey].type == 'twitch'){
+			if(getStatusFromTwitch(streamsDB[streammerKey]) == true){
+				onlineStreams.push(streamsDB[streammerKey]);
+			} else {
+				offlineStreams.push(streamsDB[streammerKey]);
+			}
+		} else if (streamsDB[streammerKey].type == 'azubu'){
+			if(getStatusFromAzubu(streamsDB[streammerKey]) == true){
+				onlineStreams.push(streamsDB[streammerKey]);
+			} else {
+				offlineStreams.push(streamsDB[streammerKey]);
 			}
 		}
-
-		reloadScreen();
-
-		showLoadingMessage(false);
 	}
 
-	function reloadScreen() {
-		var $onlineStreams = $('#online');
-		var $offlineStreams = $('#offline');
+	reloadScreen();
 
-		$onlineStreams.html('');
-		$offlineStreams.html('');
+	showLoadingMessage(false);
+}
 
-		var $noOnlineMessage = $('#no-online');
-		var $noOfflineMessage = $('#no-offline');
+/*
+* Reload streams screen with updated information
+*/
+function reloadScreen() {
+	var $onlineStreams = $('#online');
+	var $offlineStreams = $('#offline');
 
-		var totalStreammers = onlineStreams.length + offlineStreams.length;
+	$onlineStreams.html('');
+	$offlineStreams.html('');
 
-		$onlineStreams.show();
-		$offlineStreams.show();
-		$noOnlineMessage.hide();
-		$noOfflineMessage.hide();
+	var $noOnlineMessage = $('#no-online');
+	var $noOfflineMessage = $('#no-offline');
 
-		if (onlineStreams && onlineStreams.length) {
-		    for (var key in onlineStreams) {
-		        $onlineStreams.append('<li class="mdl-list__item mdl-list__item--two-line"><a target="_blank" href="' + onlineStreams[key].stream_url + '">' +
-                                      '<div class="mdl-list__item-primary-content">' +
-                                      '<i class="material-icons mdl-list__item-avatar" style="background-image: url(' + onlineStreams[key].thumbnail_url + ')"></i>' +
-                                      '<div class="streamer-name">' + onlineStreams[key].name + '</div>' +
-                                      '<div class="mdl-list__item-sub-title">Playing ' + onlineStreams[key].gamePlaying + '</div>' +
-                                      '<div class="mdl-list__item-sub-title">' + onlineStreams[key].numberOfWatchers + ' watching</div>' +
-                                      '</a></div></li>');
-		    }
-		} else {
-		    $noOnlineMessage.show();
-		    $onlineStreams.hide();
+	var totalStreammers = onlineStreams.length + offlineStreams.length;
+
+	$onlineStreams.show();
+	$offlineStreams.show();
+	$noOnlineMessage.hide();
+	$noOfflineMessage.hide();
+
+	if (onlineStreams && onlineStreams.length) {
+		for (var key in onlineStreams) {
+		    $onlineStreams.append('<li class="mdl-list__item mdl-list__item--two-line"><a target="_blank" href="' + onlineStreams[key].stream_url + '">' +
+                                    '<div class="mdl-list__item-primary-content">' +
+                                    '<i class="material-icons mdl-list__item-avatar" style="background-image: url(' + onlineStreams[key].thumbnail_url + ')"></i>' +
+                                    '<div class="streamer-name">' + onlineStreams[key].name + '</div>' +
+                                    '<div class="mdl-list__item-sub-title">Playing ' + onlineStreams[key].gamePlaying + '</div>' +
+                                    '<div class="mdl-list__item-sub-title">' + onlineStreams[key].numberOfWatchers + ' watching</div>' +
+                                    '</a></div></li>');
 		}
+	} else {
+		$noOnlineMessage.show();
+		$onlineStreams.hide();
+	}
 
-		$('#onlineCount').html('(' + onlineStreams.length + '/' + totalStreammers + ')');
+	$('#onlineCount').html('(' + onlineStreams.length + '/' + totalStreammers + ')');
 
-		if (offlineStreams && offlineStreams.length) {
-		    for (var key in offlineStreams) {
-		        $offlineStreams.append('<li class="mdl-list__item mdl-list__item--two-line"><a target="_blank" href="' + offlineStreams[key].stream_url + '">' +
-                                      '<div class="mdl-list__item-primary-content">' +
-                                      '<i class="material-icons mdl-list__item-avatar"></i>' +
-                                      '<div style="padding-top: 10px;" class="streamer-name">' + offlineStreams[key].name + '</div>' +
-                                      '</a></div></li>');
-		    }
-		} else {
-		    $noOfflineMessage.show();
-		    $offlineStreams.hide();
+	chrome.browserAction.setBadgeText({ text: '' + onlineStreams.length });
+
+	if (offlineStreams && offlineStreams.length) {
+		for (var key in offlineStreams) {
+		    $offlineStreams.append('<li class="mdl-list__item mdl-list__item--two-line"><a target="_blank" href="' + offlineStreams[key].stream_url + '">' +
+                                    '<div class="mdl-list__item-primary-content">' +
+                                    '<i class="material-icons mdl-list__item-avatar"></i>' +
+                                    '<div style="padding-top: 10px;" class="streamer-name">' + offlineStreams[key].name + '</div>' +
+                                    '</a></div></li>');
 		}
-
-		$('#offlineCount').html('(' + offlineStreams.length + '/' + totalStreammers + ')');
+	} else {
+		$noOfflineMessage.show();
+		$offlineStreams.hide();
 	}
 
-	function getStatusFromTwitch(streammer){
-		var isOnline = false;
+	$('#offlineCount').html('(' + offlineStreams.length + '/' + totalStreammers + ')');
+}
 
-		$.getJSON('https://api.twitch.tv/kraken/streams/' + streammer.id, function (channel) {
-		    console.log(channel);
-		    streammer.stream_url = 'http://www.twitch.tv/' + streammer.id;
+/*
+* Checks if user is online on Twitch and returns it. If user is online, then its information is stored
+*/
+function getStatusFromTwitch(streammer){
+	var isOnline = false;
 
-		    if (channel["stream"]) {
-		        streammer.gamePlaying = channel.stream.game;
-		        streammer.numberOfWatchers = channel.stream.viewers;
-		        streammer.thumbnail_url = channel.stream.channel.logo;
+	$.getJSON('https://api.twitch.tv/kraken/streams/' + streammer.id, function (channel) {
+		console.log(channel);
+		streammer.stream_url = 'http://www.twitch.tv/' + streammer.id;
 
-		        isOnline = true;
-		    }
-		});
+		if (channel["stream"]) {
+		    streammer.gamePlaying = channel.stream.game;
+		    streammer.numberOfWatchers = channel.stream.viewers;
+		    streammer.thumbnail_url = channel.stream.channel.logo;
 
-		return isOnline;
-	}
+		    isOnline = true;
+		}
+	});
 
-	function getStatusFromAzubu(streammer){
-		var isOnline = false;
+	return isOnline;
+}
 
-		$.getJSON('http://api.azubu.tv/public/channel/' + streammer.id + '/info', function (channel) {
-		    console.log(channel);
-		    streammer.stream_url = 'http://www.azubu.tv/' + streammer.id;
+/*
+* Checks if user is online on Azubu and returns it. If user is online, then its information is stored
+*/
+function getStatusFromAzubu(streammer){
+	var isOnline = false;
 
-		    if (channel.data && channel.data.is_live == true) {
-		        streammer.gamePlaying = channel.data.category.title;
-		        streammer.numberOfWatchers = channel.data.view_count;
-		        streammer.thumbnail_url = channel.data.url_thumbnail;
+	$.getJSON('http://api.azubu.tv/public/channel/' + streammer.id + '/info', function (channel) {
+		console.log(channel);
+		streammer.stream_url = 'http://www.azubu.tv/' + streammer.id;
 
-		        isOnline = true;
-		    }
-		});
+		if (channel.data && channel.data.is_live == true) {
+		    streammer.gamePlaying = channel.data.category.title;
+		    streammer.numberOfWatchers = channel.data.view_count;
+		    streammer.thumbnail_url = channel.data.url_thumbnail;
 
-		return isOnline;
-	}
+		    isOnline = true;
+		}
+	});
+
+	return isOnline;
+}
+
+/*
+* Adds a new Streamer from URL to local DB
+*/
+function addStreamer() {
+	setBusyState(true);
+
+	$('#success-addition').hide();
+	$('.error-message').hide();
+
+    try{
+        var newStreamUrl = $('#newStreamUrl').val();
+
+        //checking if field is empty
+        if (!newStreamUrl || newStreamUrl.length == 0) {
+            $('#format-error-addition').show();
+            setBusyState(false);
+            return;
+        }
+
+        var type;
+
+        //checking if stream url is in current format and determining the domain
+        if (newStreamUrl.indexOf('twitch.tv/') < 0){
+            if (newStreamUrl.indexOf('azubu.tv/') < 0) {
+                $('#format-error-addition').show();
+                setBusyState(false);
+                return;
+            } else {
+                type = 'azubu';
+            }
+        } else {
+            type = 'twitch';
+        }
+
+        var id = newStreamUrl.substring(newStreamUrl.lastIndexOf('/') + 1).toLowerCase();
+
+        if (streamsDB[id]) {
+            $('#already-exists-addition').show();
+            setBusyState(false);
+            return;
+        }
+
+        //making request to check if user exists
+        if (type == 'twitch') {
+            $.getJSON('https://api.twitch.tv/kraken/streams/' + id, function (data) {
+                console.log(data);
+                streamsDB[id] = {
+                    name: data.name,
+                    id: id,
+                    type: type
+                }
+
+                localStorage.setItem('streams-mygamingstreams', JSON.stringify(streamsDB));
+                $('#success-addition').show();
+
+                updateOnlineStreams();
+            }).error(function (data) {
+                console.log(data);
+                if (data.status == 404) {
+                    $('#not-found-addition').show();
+                } else {
+                    $('#unknow-error-addition').show();
+                }
+
+                setBusyState(false);
+                return;
+            });
+        } else if (type == 'azubu') {
+            $.getJSON('http://api.azubu.tv/public/channel/' + id, function (data) {
+                console.log(data);
+                streamsDB[id] = {
+                    name: data.data.user.display_name,
+                    id: id,
+                    type: type
+                }
+
+                localStorage.setItem('streams-mygamingstreams', JSON.stringify(streamsDB));
+                $('#success-addition').show();
+
+                updateOnlineStreams();
+            }).error(function (data) {
+                console.log(data);
+                if (data.status == 404) {
+                    $('#not-found-addition').show();
+                } else {
+                    $('#unknow-error-addition').show();
+                }
+
+                setBusyState(false);
+                return;
+            });
+        } else {
+            $('#unknow-error-addition').show();
+            setBusyState(false);
+        }
+    } catch (err) {
+        console.log(err);
+        $('#unknow-error-addition').show();
+        setBusyState(false);
+    }
+}

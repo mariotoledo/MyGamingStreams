@@ -1,4 +1,8 @@
-﻿<html>
+﻿<!-- ======================================================================================== -->
+<!-- ================================= MY GAMING STREAMS ==================================== -->
+<!-- ====================== by Mario Toledo (mariotoledo12@gmail.com) ======================= -->
+<!-- ======================================================================================== -->
+<html>
 	<head>
         <link href="material.min.css" rel="stylesheet">
         <link href="font-awesome.min.css" rel="stylesheet">
@@ -17,15 +21,21 @@
                 text-align: center;
             }
 
+            .alert {
+                padding: 3px;
+                text-align: center;
+                margin-bottom: 15px;
+            }
+
             .subTitle-online .mdl-layout-title, .subTitle-offline .mdl-layout-title{
                 line-height: 56px;
             }
 
-            .subTitle-online{
+            .subTitle-online, .success-message{
                 background-color: rgb(139, 195, 74);
             }
 
-            .subTitle-offline{
+            .subTitle-offline, .error-message{
                 background-color: rgb(244, 67, 54);
                 color: #FFF;
             }
@@ -56,13 +66,20 @@
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
             mdl-layout--fixed-tabs">
             <header class="mdl-layout__header">
-                <div style="padding-top: 12px;" aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button"><i class="fa fa-info-circle"></i></div>
-                <div class="mdl-layout__header-row">
+                <div aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button" style="border-right: 1px solid rgb(181, 51, 200); margin: 0px; height: 55px;"><i title="About" style="padding-top: 14px; padding-left: 2px;" class="fa fa-info-circle"></i></div>
+                <div class="mdl-layout__header-row" style="padding: 0 10px 0 65px; border-bottom: 1px solid rgb(181, 51, 200);">
                     <span class="mdl-layout-title">My Gaming Streams</span>
-                    <button id="refresh-button"
-                            class="mdl-button mdl-js-button mdl-button--icon">
-                        <i class="fa fa-refresh fa-1"></i>
-                    </button>
+                    <div class="mdl-layout-spacer"></div>
+                    <nav class="mdl-navigation" style="border-left: 1px solid rgb(181, 51, 200);">
+                        <div  title="Refresh list" id="refresh-button"
+                                class="mdl-button mdl-js-button mdl-button--icon" style="padding-left: 6px; padding-top: 6px; cursor: pointer;">
+                            <i class="fa fa-refresh"></i>
+                        </div>
+                        <div title="Refreshing" id="refreshing-icon"
+                                class="mdl-button mdl-js-button mdl-button--icon" style="padding-left: 6px; padding-top: 6px; display: none;">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                    </nav>
                 </div>
                 
                 <!-- Tabs -->
@@ -76,9 +93,11 @@
                 <div class="about">
                     <p>Developed by <b>Mario Toledo</b></p>
                 </div>
-                
             </div>
             <main class="mdl-layout__content">
+                <!-- ======================================================================================== -->
+                <!-- ==================================== FIRST TAB ========================================= -->
+                <!-- ======================================================================================== -->
                 <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
                     <div class="page-content">
                         <div id="loading" style="padding: 20px;">
@@ -99,14 +118,45 @@
                         </div>
                     </div>
                 </section>
+                <!-- ======================================================================================== -->
+                <!-- =================================== SECOND TAB ========================================= -->
+                <!-- ======================================================================================== -->
                 <section class="mdl-layout__tab-panel" id="fixed-tab-2">
-                    <div class="page-content">
-
+                    <div style="padding: 20px;">
+                        <div class="page-content">
+                            <div class="alert success-message" id="success-addition" style="display: none;">
+                                Streammer added succesfully!
+                            </div>
+                            <div class="alert error-message" id="format-error-addition" style="display: none;">
+                                You need to add a stream url in a valid format.
+                            </div>
+                            <div class="alert error-message" id="not-found-addition" style="display: none;">
+                                We could not find this streamer :(
+                            </div>
+                            <div class="alert error-message" id="already-exists-addition" style="display: none;">
+                                This user was already added before.
+                            </div>
+                            <div class="alert error-message" id="unknow-error-addition" style="display: none;">
+                                There was an error while we tryed to get this streammer. Are you sure that the URL is correct?
+                            </div>
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" type="text" id="newStreamUrl">
+                                <label class="mdl-textfield__label" for="newStreamUrl">Insert stream URL here</label>
+                            </div>
+                            <button id="btnAddStreamer" class="mdl-button mdl-js-button mdl-button--raised" style="width: 100%;">
+                                Add
+                            </button>
+                            <br/>
+                            <hr/>
+                            <p>
+                                Examples:<br/>
+                                <i>http://www.twitch.tv/stonedyooda</i>
+                                <i>http://www.azubu.tv/kami</i>
+                            </p>
+                        </div>
                     </div>
                 </section>
             </main>
         </div>
-
-		
 	</body>
 </html>
