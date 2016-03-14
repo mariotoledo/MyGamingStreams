@@ -1,8 +1,8 @@
 {
   "manifest_version": 2,
 
-  "name": "My Gaming Streams - League of Legends, Dota, Counter Strike",
-  "description": "Check the status of your favorite gaming streamers",
+  "name": "My Gaming Streams - League of Legends, Dota, Counter Strike and more",
+  "description": "Check the status of your favorite gaming streamers from Azubu, Twitch and others channels. Keep track of the best plays in League of Legends, Dota, Counter Strike and more!",
   "version": "1.0",
   "browser_action": {
     "default_icon": "icon.png",
