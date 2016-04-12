@@ -246,7 +246,7 @@ function addStreamer() {
 
         //checking if stream url is in current format and determining the domain
         if (newStreamUrl.indexOf('twitch.tv/') < 0){
-            if (newStreamUrl.indexOf('azubu.tv/') < 0) {
+            if (newStreamUrl.indexOf('azubu.tv/') < 0 && newStreamUrl.indexOf('azubu.uol/') < 0) {
                 $('#format-error-addition').show();
                 setBusyState(false);
                 return;
@@ -270,7 +270,7 @@ function addStreamer() {
             $.getJSON('https://api.twitch.tv/kraken/streams/' + id, function (data) {
                 console.log(data);
                 streamsDB[id] = {
-                    name: data.name,
+                    name: data.stream.channel.display_name,
                     id: id,
                     type: type
                 }
