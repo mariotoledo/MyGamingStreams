@@ -186,7 +186,6 @@ function getStatusFromTwitch(streammer){
 	var isOnline = false;
 
 	$.getJSON('https://api.twitch.tv/kraken/streams/' + streammer.id, function (channel) {
-		console.log(channel);
 		streammer.stream_url = 'http://www.twitch.tv/' + streammer.id;
 
 		if (channel["stream"]) {
@@ -208,7 +207,6 @@ function getStatusFromAzubu(streammer){
 	var isOnline = false;
 
 	$.getJSON('http://api.azubu.tv/public/channel/' + streammer.id + '/info', function (channel) {
-		console.log(channel);
 		streammer.stream_url = 'http://www.azubu.tv/' + streammer.id;
 
 		if (channel.data && channel.data.is_live == true) {
@@ -268,7 +266,6 @@ function addStreamer() {
         //making request to check if user exists
         if (type == 'twitch') {
             $.getJSON('https://api.twitch.tv/kraken/streams/' + id, function (data) {
-                console.log(data);
                 streamsDB[id] = {
                     name: data.stream.channel.display_name,
                     id: id,
@@ -280,7 +277,6 @@ function addStreamer() {
 
                 updateOnlineStreams();
             }).error(function (data) {
-                console.log(data);
                 if (data.status == 404) {
                     $('#not-found-addition').show();
                 } else {
@@ -292,7 +288,6 @@ function addStreamer() {
             });
         } else if (type == 'azubu') {
             $.getJSON('http://api.azubu.tv/public/channel/' + id, function (data) {
-                console.log(data);
                 streamsDB[id] = {
                     name: data.data.user.display_name,
                     id: id,
@@ -304,7 +299,6 @@ function addStreamer() {
 
                 updateOnlineStreams();
             }).error(function (data) {
-                console.log(data);
                 if (data.status == 404) {
                     $('#not-found-addition').show();
                 } else {
@@ -319,7 +313,6 @@ function addStreamer() {
             setBusyState(false);
         }
     } catch (err) {
-        console.log(err);
         $('#unknow-error-addition').show();
         setBusyState(false);
     }

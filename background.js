@@ -5,12 +5,14 @@
 * in charge of update the badge count every minute
 */
 
-var pollInterval = 1000 * 60; //1 minute, in milliseconds
+var pollInterval = 1000 * 60;
 
 function startRequest() {
-    console.log('teste');
-    alert('calling me!');
     updateOnlineStreams();
     chrome.browserAction.setBadgeText({ text: '' + onlineStreams.length });
     window.setTimeout(startRequest, pollInterval);
 }
+
+$(document).ready(function(){
+	startRequest();
+});
