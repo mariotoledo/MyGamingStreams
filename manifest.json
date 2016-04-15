@@ -16,6 +16,9 @@
     "scripts": ["background.js"]
   },
   "permissions": [
-   "activeTab", "background"
-   ]
+   "notifications", "activeTab", "background"
+   ],
+   "web_accessible_resources": [
+    "icon48.png"
+  ]
 }

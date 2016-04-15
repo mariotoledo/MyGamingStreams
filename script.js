@@ -374,3 +374,17 @@ function goToMainMenu(){
 	$('#add-stream .alert').hide();
 	$('#main-stream').show();
 }
+
+function testNotification(){
+	chrome.notifications.create(
+	    'name-for-notification',{   
+	    type: 'basic', 
+	    iconUrl: 'icon48.png', 
+	    title: "This is a notification", 
+	    message: "hello there!" 
+	    },
+
+	function() {} 
+
+	);
+}
