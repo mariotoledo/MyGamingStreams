@@ -57,6 +57,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
 	$('#btnAddStreamer').click(function (e) { addStreamer() });
 	$('#refresh-button').click(function (e) { updateOnlineStreams() });
+	$('#mnu-link-addAStream').click(function (e) { e.preventDefault(); goToAddAStream() });
+	$('#mnu-btn-back').click(function (e) { e.preventDefault(); goToMainMenu() });
+	$('#mnu-link-removeAStream').click(function (e) { e.preventDefault(); goToRemoveAStream() });
+	
 
 	updateOnlineStreams();
 }, false);
@@ -244,7 +248,7 @@ function addStreamer() {
 
         //checking if stream url is in current format and determining the domain
         if (newStreamUrl.indexOf('twitch.tv/') < 0){
-            if (newStreamUrl.indexOf('azubu.tv/') < 0 && newStreamUrl.indexOf('azubu.uol/') < 0) {
+            if (newStreamUrl.indexOf('azubu.tv/') < 0 && newStreamUrl.indexOf('azubu.uol') < 0) {
                 $('#format-error-addition').show();
                 setBusyState(false);
                 return;
@@ -316,4 +320,57 @@ function addStreamer() {
         $('#unknow-error-addition').show();
         setBusyState(false);
     }
+}
+
+function goToAddAStream(){
+	$('#main-stream').hide();
+	$('#mnu-btn-back').show();
+	$('#add-stream').show();
+}
+
+function goToRemoveAStream(){
+	$toRemoveStreamsWrapper = $('#to-remove-streams-wrapper');
+
+	updateToRemoveStreamsList();
+
+	$('#main-stream').hide();
+	$('#mnu-btn-back').show();
+	$('#remove-stream').show();
+}
+
+function updateToRemoveStreamsList(){
+	var streams = onlineStreams.concat(offlineStreams);
+
+	if (streams && streams.length > 0) {
+		var toRemoveStreams = "";
+		for (var key in streams) {
+		    toRemoveStreams += '<li class="mdl-list__item"><span class="mdl-list__item-primary-content">' + streams[key].name + 
+		    				   '</span><a class="mdl-list__item-secondary-action btn-remove-stream" data-streamId="' + streams[key].id.toLowerCase() + '" href="#"><i class="fa fa-times" aria-hidden="true"></i></a></li>';
+		}
+
+		$toRemoveStreamsWrapper.html(toRemoveStreams);
+	} else {
+		$toRemoveStreamsWrapper.html('<li class="no-users"><i>There are no users to remove</i></li>');
+	}
+
+	$('.btn-remove-stream').click(function (e) {e.preventDefault(); removeStream(jQuery(this).attr('data-streamId')) });
+}
+
+function removeStream(id){
+	console.log('chamando: ' + id);
+	console.log(streamsDB[id]);
+	if(streamsDB && streamsDB[id]){
+		console.log('entrou');
+		delete streamsDB[id];
+		localStorage.setItem('streams-mygamingstreams', JSON.stringify(streamsDB));
+		updateOnlineStreams();
+		updateToRemoveStreamsList();
+	}
+}
+
+function goToMainMenu(){
+	$('.sub-menu').hide();
+	$('#mnu-btn-back').hide();
+	$('#add-stream .alert').hide();
+	$('#main-stream').show();
 }

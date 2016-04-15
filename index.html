@@ -14,6 +14,12 @@
 
             .about{
                 padding: 20px;
+                text-align: center;
+            }
+
+            .about a{
+                text-decoration: none;
+                font-weight: bold;
             }
 
             .subTitle-online, .subTitle-offline{
@@ -52,6 +58,25 @@
             .mdl-list{
                 margin-top: 0px;
             }
+
+            .menu-title{
+                padding-left: 0px;
+                text-align: center;
+                background-color: rgb(156,39,176);
+                color: #FFF;
+                font-size: 18px;
+            }
+
+            .menu-link{
+                border-bottom: 1px solid rgb(181, 51, 200);
+            }
+
+            #mnu-btn-back{
+                position: absolute;
+                left: 10;
+                top: 18;
+                color: #FFF;
+            }
 		</style>
 
         <script type="text/javascript" src="jquery.min.js"></script>
@@ -66,7 +91,7 @@
         <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
             mdl-layout--fixed-tabs">
             <header class="mdl-layout__header">
-                <div aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button" style="border-right: 1px solid rgb(181, 51, 200); margin: 0px; height: 55px;"><i title="About" style="padding-top: 14px; padding-left: 2px;" class="fa fa-info-circle"></i></div>
+                <div aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button" style="border-right: 1px solid rgb(181, 51, 200); margin: 0px; height: 55px;"><i title="About" style="padding-top: 14px; padding-left: 2px;" class="fa fa-bars"></i></div>
                 <div class="mdl-layout__header-row" style="padding: 0 10px 0 65px; border-bottom: 1px solid rgb(181, 51, 200);">
                     <span class="mdl-layout-title">My Gaming Streams</span>
                     <div class="mdl-layout-spacer"></div>
@@ -81,18 +106,65 @@
                         </div>
                     </nav>
                 </div>
-                
-                <!-- Tabs -->
-                <div class="mdl-layout__tab-bar mdl-js-ripple-effect">
-                    <a href="#fixed-tab-1" class="mdl-layout__tab is-active">Streams</a>
-                    <a href="#fixed-tab-2" class="mdl-layout__tab">Add</a>
-                </div>
             </header>
             <div class="mdl-layout__drawer">
-                <span class="mdl-layout-title">My Gaming Streams</span>
-                <div class="about">
-                    <p>Developed by <b>Mario Toledo</b></p>
-					<p><a href="https://github.com/mariotoledo" target="_blank">Follow me on Github</a></p>
+                <span class="mdl-layout-title menu-title" style="padding-left: 0px;"><a id="mnu-btn-back" href="#" style="display: none;"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>MENU</span>
+                <div id="main-stream">
+                    <nav class="mdl-navigation menu-navigation" style="padding-top: 0px;">
+                      <a id="mnu-link-addAStream" class="mdl-navigation__link menu-link" href="#">ADD A STREAM</a>
+                      <a id="mnu-link-removeAStream" class="mdl-navigation__link menu-link" href="#">REMOVE A STREAM</a>
+                      <a class="mdl-navigation__link menu-link" href="">SETTINGS</a>
+                    </nav>
+                    <div class="about">
+                        <p>Developed by <b><a href="https://github.com/mariotoledo" target="_blank">Mario Toledo</a></b></p>
+                    </div>
+                </div>
+                <div id="add-stream" class="sub-menu" style="display: none;">
+                    <div style="padding: 20px;">
+                        <div class="page-content">
+                            <div class="alert success-message" id="success-addition" style="display: none;">
+                                Streammer added succesfully!
+                            </div>
+                            <div class="alert error-message" id="format-error-addition" style="display: none;">
+                                You need to add a stream url in a valid format.
+                            </div>
+                            <div class="alert error-message" id="not-found-addition" style="display: none;">
+                                We could not find this streamer :(
+                            </div>
+                            <div class="alert error-message" id="already-exists-addition" style="display: none;">
+                                This user was already added before.
+                            </div>
+                            <div class="alert error-message" id="unknow-error-addition" style="display: none;">
+                                There was an error while we tryed to get this streammer. Are you sure that the URL is correct?
+                            </div>
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" type="text" id="newStreamUrl">
+                                <label class="mdl-textfield__label" for="newStreamUrl">Insert stream URL here</label>
+                            </div>
+                            <button id="btnAddStreamer" class="mdl-button mdl-js-button mdl-button--raised" style="width: 100%;">
+                                Add
+                            </button>
+                            <br/>
+                            <hr/>
+                            <p style="font-size: 10px;">
+                                Examples:<br/>
+                                <i>http://www.twitch.tv/stonedyooda</i>
+                                <i>http://www.azubu.tv/kami</i>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div id="remove-stream" class="sub-menu" style="display: none;">
+                    <div style="padding: 20px;">
+                        <div class="page-content">
+                            <div class="alert success-message" id="success-addition" style="display: none;">
+                                Streammer removed succesfully!
+                            </div>
+                            <ul class="demo-list-two mdl-list" id="to-remove-streams-wrapper">
+
+                            </ul>
+                        </div>
+                    </div>
                 </div>
             </div>
             <main class="mdl-layout__content">
@@ -123,39 +195,7 @@
                 <!-- =================================== SECOND TAB ========================================= -->
                 <!-- ======================================================================================== -->
                 <section class="mdl-layout__tab-panel" id="fixed-tab-2">
-                    <div style="padding: 20px;">
-                        <div class="page-content">
-                            <div class="alert success-message" id="success-addition" style="display: none;">
-                                Streammer added succesfully!
-                            </div>
-                            <div class="alert error-message" id="format-error-addition" style="display: none;">
-                                You need to add a stream url in a valid format.
-                            </div>
-                            <div class="alert error-message" id="not-found-addition" style="display: none;">
-                                We could not find this streamer :(
-                            </div>
-                            <div class="alert error-message" id="already-exists-addition" style="display: none;">
-                                This user was already added before.
-                            </div>
-                            <div class="alert error-message" id="unknow-error-addition" style="display: none;">
-                                There was an error while we tryed to get this streammer. Are you sure that the URL is correct?
-                            </div>
-                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-                                <input class="mdl-textfield__input" type="text" id="newStreamUrl">
-                                <label class="mdl-textfield__label" for="newStreamUrl">Insert stream URL here</label>
-                            </div>
-                            <button id="btnAddStreamer" class="mdl-button mdl-js-button mdl-button--raised" style="width: 100%;">
-                                Add
-                            </button>
-                            <br/>
-                            <hr/>
-                            <p>
-                                Examples:<br/>
-                                <i>http://www.twitch.tv/stonedyooda</i>
-                                <i>http://www.azubu.tv/kami</i>
-                            </p>
-                        </div>
-                    </div>
+                    
                 </section>
             </main>
         </div>
