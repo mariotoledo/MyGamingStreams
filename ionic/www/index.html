@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="initial-scale=1, maximum-scale=1, user-scalable=no, width=device-width">
+    <title></title>
+
+    <link href="lib/ionic/css/ionic.css" rel="stylesheet">
+    <link href="css/font-awesome.min.css" rel="stylesheet">
+    <link href="css/material.min.css" rel="stylesheet">
+    <link href="css/style.css" rel="stylesheet">
+
+    <!-- IF using Sass (run gulp sass first), then uncomment below and remove the CSS includes above
+    <link href="css/ionic.app.css" rel="stylesheet">
+    -->
+
+    <!-- ionic/angularjs js -->
+    <script src="lib/ionic/js/ionic.bundle.js"></script>
+
+    <!-- cordova script (this will be a 404 during development) -->
+    <script src="cordova.js"></script>
+
+    <script type="text/javascript" src="js/material.min.js"></script>
+
+    <!-- your app's js -->
+    <script src="js/app.js"></script>
+  </head>
+  <body ng-app="starter">
+
+    <!-- ======================================================================================== -->
+        <!-- =================================== HEADER START ======================================= -->
+        <!-- ======================================================================================== -->
+
+        <div class="mdl-layout mdl-js-layout mdl-layout--fixed-header
+            mdl-layout--fixed-tabs">
+            <header class="mdl-layout__header">
+                <div aria-expanded="false" role="button" tabindex="0" class="mdl-layout__drawer-button" style="border-right: 1px solid rgb(181, 51, 200); margin: 0px; height: 55px;"><i title="About" style="padding-top: 14px; padding-left: 2px;" class="fa fa-bars"></i></div>
+                <div class="mdl-layout__header-row" style="padding: 0 10px 0 65px; border-bottom: 1px solid rgb(181, 51, 200);">
+                    <span class="mdl-layout-title">My Gaming Streams</span>
+                    <div class="mdl-layout-spacer"></div>
+                    <nav class="mdl-navigation" style="border-left: 1px solid rgb(181, 51, 200);">
+                        <div  title="Refresh list" id="refresh-button"
+                                class="mdl-button mdl-js-button mdl-button--icon" style="padding-left: 6px; padding-top: 6px; cursor: pointer;">
+                            <i class="fa fa-refresh"></i>
+                        </div>
+                        <div title="Refreshing" id="refreshing-icon"
+                                class="mdl-button mdl-js-button mdl-button--icon" style="padding-left: 6px; padding-top: 6px; display: none;">
+                            <i class="fa fa-refresh fa-spin"></i>
+                        </div>
+                    </nav>
+                </div>
+            </header>
+            <div class="mdl-layout__drawer">
+                <span class="mdl-layout-title menu-title" style="padding-left: 0px;"><a id="mnu-btn-back" href="#" style="display: none;"><i class="fa fa-chevron-left" aria-hidden="true"></i></a>MENU</span>
+                <div id="main-stream">
+                    <nav class="mdl-navigation menu-navigation" style="padding-top: 0px;">
+                      <a class="mdl-navigation__link menu-link" ngClick="goToAddAStream()" href="#">ADD A STREAM</a>
+                      <a class="mdl-navigation__link menu-link" ngClick="goToRemoveAStream()" href="#">REMOVE A STREAM</a>
+                    </nav>
+                    <div class="about">
+                        <p>Developed by <b><a href="https://github.com/mariotoledo" target="_blank">Mario Toledo</a></b></p>
+                    </div>
+                </div>
+                <div id="add-stream" class="sub-menu" style="display: none;">
+                    <div style="padding: 20px;">
+                        <div class="page-content">
+                            <div class="alert success-message" id="success-addition" style="display: none;">
+                                Streammer added succesfully!
+                            </div>
+                            <div class="alert error-message" id="format-error-addition" style="display: none;">
+                                You need to add a stream url in a valid format.
+                            </div>
+                            <div class="alert error-message" id="not-found-addition" style="display: none;">
+                                We could not find this streamer :(
+                            </div>
+                            <div class="alert error-message" id="already-exists-addition" style="display: none;">
+                                This user was already added before.
+                            </div>
+                            <div class="alert error-message" id="unknow-error-addition" style="display: none;">
+                                There was an error while we tryed to get this streammer. Are you sure that the URL is correct?
+                            </div>
+                            <div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+                                <input class="mdl-textfield__input" type="text" id="newStreamUrl">
+                                <label class="mdl-textfield__label" for="newStreamUrl">Insert stream URL here</label>
+                            </div>
+                            <button id="btnAddStreamer" class="mdl-button mdl-js-button mdl-button--raised" style="width: 100%;">
+                                Add
+                            </button>
+                            <br/>
+                            <hr/>
+                            <p style="font-size: 10px;">
+                                Examples:<br/>
+                                <i>http://www.twitch.tv/stonedyooda</i>
+                                <i>http://www.azubu.tv/kami</i>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+                <div id="remove-stream" class="sub-menu" style="display: none;">
+                    <div style="padding: 20px;">
+                        <div class="page-content">
+                            <div class="alert success-message" id="success-addition" style="display: none;">
+                                Streammer removed succesfully!
+                            </div>
+                            <ul class="demo-list-two mdl-list" id="to-remove-streams-wrapper">
+
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <main class="mdl-layout__content">
+                <!-- ======================================================================================== -->
+                <!-- ==================================== FIRST TAB ========================================= -->
+                <!-- ======================================================================================== -->
+                <section class="mdl-layout__tab-panel is-active" id="fixed-tab-1">
+                    <div class="page-content">
+                        <div id="loading" style="padding: 20px;">
+                            <div id="p2" class="mdl-progress mdl-js-progress mdl-progress__indeterminate"></div>
+                        </div>
+                        <div id="streams" style="display: none;">
+                            <div class="subTitle-online">
+                                <span class="mdl-layout-title">Online <span id="onlineCount"></span></span>
+                            </div>
+                            <ul class="demo-list-two mdl-list"  id="online">
+                            </ul>
+                            <div style="padding: 20px; text-align: center;" id="no-online">There are no streammers online</div>
+                            <div class="subTitle-offline">
+                                <span class="mdl-layout-title">Offline <span id="offlineCount"></span></span>
+                            </div>
+                            <ul class="demo-list-two mdl-list" id="offline"></ul>
+                            <div style="padding: 20px; text-align: center;" id="no-offline">There are no streammers offline</div>
+                        </div>
+                    </div>
+                </section>
+                <!-- ======================================================================================== -->
+                <!-- =================================== SECOND TAB ========================================= -->
+                <!-- ======================================================================================== -->
+                <section class="mdl-layout__tab-panel" id="fixed-tab-2">
+                    
+                </section>
+            </main>
+        </div>
+  </body>
+</html>
