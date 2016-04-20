@@ -269,9 +269,9 @@ function addStreamer() {
 
         //making request to check if user exists
         if (type == 'twitch') {
-            $.getJSON('https://api.twitch.tv/kraken/streams/' + id, function (data) {
+            $.getJSON('https://api.twitch.tv/kraken/users/' + id, function (data) {
                 streamsDB[id] = {
-                    name: data.stream.channel.display_name,
+                    name: data.display_name,
                     id: id,
                     type: type
                 }
