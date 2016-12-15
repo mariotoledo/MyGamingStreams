@@ -188,18 +188,25 @@ function reloadScreen() {
 */
 function getStatusFromTwitch(streammer){
 	var isOnline = false;
+     $.ajax({
+          url: 'https://api.twitch.tv/kraken/streams/' + streammer.id,
+          type: 'GET',
+          dataType: 'json',
+          success: function (channel) {
+            streammer.stream_url = 'http://www.twitch.tv/' + streammer.id;
 
-	$.getJSON('https://api.twitch.tv/kraken/streams/' + streammer.id, function (channel) {
-		streammer.stream_url = 'http://www.twitch.tv/' + streammer.id;
+            if (channel["stream"]) {
+                streammer.gamePlaying = channel.stream.game;
+                streammer.numberOfWatchers = channel.stream.viewers;
+                streammer.thumbnail_url = channel.stream.channel.logo;
 
-		if (channel["stream"]) {
-		    streammer.gamePlaying = channel.stream.game;
-		    streammer.numberOfWatchers = channel.stream.viewers;
-		    streammer.thumbnail_url = channel.stream.channel.logo;
-
-		    isOnline = true;
-		}
-	});
+                isOnline = true;
+            }
+          }, 
+          beforeSend: function setHeader(xhr) {
+            xhr.setRequestHeader('Client-ID', 'yzfltalkgrcn90c8f1lkno3ejnwj39');
+          }
+    });
 
 	return isOnline;
 }
@@ -269,26 +276,35 @@ function addStreamer() {
 
         //making request to check if user exists
         if (type == 'twitch') {
-            $.getJSON('https://api.twitch.tv/kraken/users/' + id, function (data) {
-                streamsDB[id] = {
-                    name: data.display_name,
-                    id: id,
-                    type: type
-                }
+            $.ajax({
+                  url: 'https://api.twitch.tv/kraken/users/' + id,
+                  type: 'GET',
+                  dataType: 'json',
+                  success: function (data) {
+                    streamsDB[id] = {
+                        name: data.display_name,
+                        id: id,
+                        type: type
+                    }
 
-                localStorage.setItem('streams-mygamingstreams', JSON.stringify(streamsDB));
-                $('#success-addition').show();
+                    localStorage.setItem('streams-mygamingstreams', JSON.stringify(streamsDB));
+                    $('#success-addition').show();
 
-                updateOnlineStreams();
-            }).error(function (data) {
-                if (data.status == 404) {
-                    $('#not-found-addition').show();
-                } else {
-                    $('#unknow-error-addition').show();
-                }
+                    updateOnlineStreams();
+                  },
+                  error: function(data){
+                    if (data.status == 404) {
+                        $('#not-found-addition').show();
+                    } else {
+                        $('#unknow-error-addition').show();
+                    }
 
-                setBusyState(false);
-                return;
+                    setBusyState(false);
+                    return;
+                  },
+                  beforeSend: function setHeader(xhr) {
+                    xhr.setRequestHeader('Client-ID', 'yzfltalkgrcn90c8f1lkno3ejnwj39');
+                  }
             });
         } else if (type == 'azubu') {
             $.getJSON('http://api.azubu.tv/public/channel/' + id, function (data) {
@@ -357,10 +373,7 @@ function updateToRemoveStreamsList(){
 }
 
 function removeStream(id){
-	console.log('chamando: ' + id);
-	console.log(streamsDB[id]);
 	if(streamsDB && streamsDB[id]){
-		console.log('entrou');
 		delete streamsDB[id];
 		localStorage.setItem('streams-mygamingstreams', JSON.stringify(streamsDB));
 		updateOnlineStreams();
