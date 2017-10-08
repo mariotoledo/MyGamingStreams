@@ -1,4 +1,4 @@
-# MyGamingStreams
+# My Gaming Streams
 > A Chrome extension to help gaming fans to track their favorites streamers from Twitch, Azubu and others stream services.
 
 It's pretty boring to keep checking if your favorite streammer is online, isn't it? Thinking on it, i've created a Chrome extension to fans check their favorite streammers status with one click.
@@ -9,4 +9,4 @@ The apps uses Azubu and Twitch api to check it's status. Basically, it's an Ajax
 
 The user can also add a new streammer to his list. It's stored on localStorage crom Chrome.
 
-https://chrome.google.com/webstore/detail/my-gaming-streams-lol-dot/apfnphjhbdcfdoidkeopblhdnnlfckff
+:arrow_forward: :arrow_forward: :arrow_forward: **[Install it right now](https://chrome.google.com/webstore/detail/my-gaming-streams-lol-dot/apfnphjhbdcfdoidkeopblhdnnlfckff)** :arrow_backward: :arrow_backward: :arrow_backward:
